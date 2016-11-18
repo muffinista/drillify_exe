@@ -59,11 +59,15 @@ stream.on('connected', function (response) {
   console.log("connected!");
 })
 
-stream.on('direct_message', function (directMsg) {
-  directMsg = directMsg.direct_message;
-  console.log(directMsg.text);
+var handleMessage = function(dm) {
+  // check for a valid user
+
+  
+  console.log(dm.text);
+
+  // filter URLs by valid users?
   var urls = _.filter(
-    _.map(directMsg.entities.urls, function(y) { return y.expanded_url; }),
+    _.map(dm.entities.urls, function(y) { return y.expanded_url; }),
     function(y) { return y.indexOf("https://twitter.com") === 0; });
 
   if ( urls.length == 0 ) {
@@ -111,4 +115,9 @@ stream.on('direct_message', function (directMsg) {
     }); // media/upload 1
   });
 
+
+};
+
+stream.on('direct_message', function (directMsg) {
+  handleMessage(directMsg.direct_message);
 });
