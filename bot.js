@@ -33,7 +33,9 @@ var dril = _.map(
 
 console.log("Working with " + dril.length + " dril tweets");
 
-wordfilter.addWords(['thoughts and prayers']);
+wordfilter.addWords([
+  'thoughts and prayers',
+  'condolences']);
 
 var tweetToPic = function(url, dest) {
   var agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36";
@@ -108,7 +110,9 @@ if ( process.argv[2] && process.argv[2] === "tweet" ) {
         function(t) {
           return (t.in_reply_to_user_id === null ) &&
                  t.retweet_count + t.favorite_count > TWEET_FAV_THRESHOLD &&
-                 t.entities.user_mentions.length === 0
+                 t.entities.user_mentions.length === 0 &&
+                 t.entities.urls.length === 0 &&
+                 t.entities.media.length === 0 
         }),
       function(t) {
         return ! wordfilter.blacklisted(t.text);
