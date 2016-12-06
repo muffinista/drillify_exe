@@ -104,6 +104,7 @@ var T = new Twit(conf.twitter);
 if ( process.argv[2] && process.argv[2] === "tweet" ) {
   var list_id = "799645328014274560";
   T.get('lists/statuses', { list_id: list_id, count: 100, include_rts:false }, function(err, data, response) {
+
     var tweets = _.filter(
       _.filter(
         data,
@@ -112,7 +113,7 @@ if ( process.argv[2] && process.argv[2] === "tweet" ) {
                  t.retweet_count + t.favorite_count > TWEET_FAV_THRESHOLD &&
                  t.entities.user_mentions.length === 0 &&
                  t.entities.urls.length === 0 &&
-                 t.entities.media.length === 0 
+                 ( typeof(t.entities.media) === "undefined" || t.entities.media.length === 0 )
         }),
       function(t) {
         return ! wordfilter.blacklisted(t.text);
