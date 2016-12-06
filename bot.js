@@ -12,9 +12,8 @@ const TWEET_FAV_THRESHOLD = 1000;
 
 var conf = JSON.parse(fs.readFileSync('conf.json'));
 const DRIL_THRESHOLD = conf.dril_threshold || 750;
-const ADMIN_USERS = conf.admin_users || [
-  "muffinista"
-];
+const ADMIN_USERS = conf.admin_users;
+const LIST_ID = conf.list_id;
 
 
 // load and filter dril tweets
@@ -102,8 +101,7 @@ var tweetUrl = function(url1) {
 var T = new Twit(conf.twitter);
 
 if ( process.argv[2] && process.argv[2] === "tweet" ) {
-  var list_id = "799645328014274560";
-  T.get('lists/statuses', { list_id: list_id, count: 100, include_rts:false }, function(err, data, response) {
+  T.get('lists/statuses', { list_id: LIST_ID, count: 100, include_rts:false }, function(err, data, response) {
 
     var tweets = _.filter(
       _.filter(
