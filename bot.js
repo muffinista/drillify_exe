@@ -46,17 +46,23 @@ var tweetToPic = function(url, dest) {
   return horseman
          .userAgent(agent)
          .viewport(3200, 2000)
+         .zoom(2)
          .open(url)
          .waitForSelector("body:not(.swift-loading)")
          .waitFor(function noAjax() {
            return $.active == 0
          },  true)
+         .evaluate(function() {
+           $(".follow-bar").html("");
+           $(".permalink-tweet-container .ProfileTweet-action:first").html("");
+         })
          .wait(3000)
          .crop(".permalink-tweet-container", dest)
          .then(function() {
            return horseman.close();
          });
 };
+
 
 var tweetUrl = function(url1) {
   var url2 = "https://twitter.com/dril/status/" + _.sample(dril);
