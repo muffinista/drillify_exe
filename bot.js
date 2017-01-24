@@ -14,7 +14,7 @@ var conf = JSON.parse(fs.readFileSync('conf.json'));
 const DRIL_THRESHOLD = conf.dril_threshold || 750;
 const ADMIN_USERS = conf.admin_users;
 const LIST_ID = conf.list_id;
-
+const SKIP_WORDS = conf.skip_words || [];
 
 // load and filter dril tweets
 var dril = _.map(
@@ -22,7 +22,6 @@ var dril = _.map(
     require('./dril.json'),
     function(t) {
       return (t.in_reply_to_user_id === null || typeof(t.in_reply_to_user_id) === "undefined") &&
-             //t.retweet_count + t.favorite_count > DRIL_THRESHOLD &&
              t.retweet_count  >= DRIL_THRESHOLD &&
              (typeof(t.entities) === "undefined" || t.entities.user_mentions.length === 0)
     }),
@@ -32,9 +31,7 @@ var dril = _.map(
 
 console.log("Working with " + dril.length + " dril tweets");
 
-wordfilter.addWords([
-  'thoughts and prayers',
-  'condolences']);
+wordfilter.addWords(SKIP_WORDS);
 
 var tweetToPic = function(url, dest) {
   var agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36";
